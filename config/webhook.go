@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
+	"time"
 
 	"github.com/jeessy2/ddns-go/v6/util"
 )
@@ -130,6 +132,7 @@ func replacePara(domains *Domains, orgPara string, ipv4Result updateStatusType, 
 		"#{ipv6Addr}", domains.Ipv6Addr,
 		"#{ipv6Result}", util.LogStr(string(ipv6Result)), // i18n
 		"#{ipv6Domains}", getDomainsStr(domains.Ipv6Domains),
+		"#{timestamp}", strconv.FormatInt(time.Now().UTC().Unix(), 10),
 	).Replace(orgPara)
 }
 

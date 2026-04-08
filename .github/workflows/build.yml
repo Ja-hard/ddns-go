@@ -3,7 +3,7 @@ name: build
 on:
   push:
     branches:
-      - fix-webhook-header-colon
+      - master
   workflow_dispatch:
 
 permissions:
