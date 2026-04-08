@@ -1,0 +1,35 @@
+name: build
+
+on:
+  push:
+    branches:
+      - fix-webhook-header-colon
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: 构建 Windows AMD64
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: 'go.mod'
+
+      - name: 构建
+        run: |
+          $VERSION = git describe --tags --always --dirty
+          $BUILD_TIME = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+          go build -ldflags="-X main.version=$VERSION -X 'main.buildTime=$BUILD_TIME' -extldflags -static -s -w" -trimpath -o ddns-go.exe .
+
+      - name: 上传构建产物
+        uses: actions/upload-artifact@v7
+        with:
+          name: ddns-go_windows_amd64
+          path: ddns-go.exe
